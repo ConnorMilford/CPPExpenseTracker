@@ -1,0 +1,4 @@
+.DS_Store
+build.*
+.vscode/settings.json
+/bin/*

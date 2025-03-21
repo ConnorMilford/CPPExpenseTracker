@@ -25,11 +25,21 @@ class Item {
     public:
         Item(std::string ident, std::string description, double amount, Date date);
         ~Item();
+
         std::string getIdent();
         std::string getDescription();
+        double getAmount();
         
+
         void setDescription(std::string description);
+        void setAmount(double amount);
+
         bool addTag(std::string tag);
+        bool deleteTag(std::string tag);
+        bool containsTag(std::string tag);
+        unsigned int numTags();
+        
+        
 };
 
 #endif // ITEM_H

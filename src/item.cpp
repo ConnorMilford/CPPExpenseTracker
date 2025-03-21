@@ -12,7 +12,7 @@
 #include "item.h"
 #include "date.h"
 
-
+#define NO_ITEM_MSG "Item not found."
 
 // a constructor that takes four parameters, a string identifier,
 // a description, an amount, and a date and initialises the object and member data.
@@ -76,7 +76,7 @@ bool Item::addTag(std::string tag) {
 
 
 
-// TODO: Write a function, deleteTag, that takes one parameter, a tag
+// function deleteTag, that takes one parameter, a tag
 // string, deletes it from the container, and returns true if the tag
 // string was deleted. If no tag exists with that name, throw an appropriate
 // exception.
@@ -86,6 +86,16 @@ bool Item::addTag(std::string tag) {
 //  iObj.addTag("tag");
 //  iObj.deleteTag("tag");
 
+bool Item::deleteTag(std::string tag) {
+    auto iterator = find(tags.begin(), tags.end(), tag);
+
+    if (iterator != tags.end()) {
+        tags.erase(iterator);
+        return true;
+    }
+    
+    throw std::out_of_range(NO_ITEM_MSG);
+}
 
 
 
@@ -96,14 +106,20 @@ bool Item::addTag(std::string tag) {
 
 
 
-// TODO: Write a function, numTags, that takes no parameters and returns an
+// function, numTags, that takes no parameters and returns an
 // unsigned int of the number of tags in the Item contains.
 //
 // Example:
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  iObj.numTags(); // 0
 
-// TODO: Write a function, containsTag, that takes one parameter, a tag string.
+unsigned int Item::numTags() {
+    return tags.size();
+}
+
+
+
+// function, containsTag, that takes one parameter, a tag string.
 // If the tag exists, return true. Otherwise return false.
 //
 // Example:
@@ -111,10 +127,30 @@ bool Item::addTag(std::string tag) {
 //  iObj.addTag("tag");
 //  iObj.containsTag("tag"); // true
 
-// TODO: Write a function, getAmount, that returns the amount for the Item.
+bool Item::containsTag(std::string tag) {
+    auto iterator = find(tags.begin(), tags.end(), tag);
+
+    if (iterator != tags.end()) {
+        return true;
+    }
+    return false;
+}
+
+
+
+
+
+// Function, getAmount, that returns the amount for the Item.
+double Item::getAmount() {
+    return amount;
+}
 
 // TODO: Write a function setAmount, that takes one parameter, a double for
 // a new amount, and updates the member variable. It returns nothing.
+
+void Item::setAmount(double amount) {
+    this->amount = amount;
+}
 
 // TODO: Write a function, getDate, that returns the date for the Item.
 

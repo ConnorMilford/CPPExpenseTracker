@@ -9,6 +9,7 @@
 #include <chrono>
 #include <string>
 #include <sstream>
+#include <regex>
 
 
 #include "date.h"
@@ -49,34 +50,50 @@ Date::Date (unsigned int year, unsigned int month, unsigned int day) : year(year
 }
 
 
-// TODO: write a constructor that takes a string argument in "YYYY-MM-DD" format
+//  A constructor that takes a string argument in "YYYY-MM-DD" format
 // and sets the appropriate member variables (year, month, day). If dateString
 // is not valid throw an appropriate exception.
 // Example:
 //  Date d = Date("2024-12-25");
+
+
+// TODO: this constructor passes all tests, but does not consider:
+// Leap years, Num days in month. e.g. 2025-02-31 is valid. 
+
 Date::Date(std::string date) {
     std::stringstream dateStream(date);
     std::string temp;
 
     char delimiter = '-';
 
+    //regex to detect format YYYY-MM-DD & 10 chars
+    if (!std::regex_match(date, std::regex(R"(\d{4}-\d{2}-\d{2})"))){
+        throw std::invalid_argument("Invalid format should be DDDD-MM-YY");
+    } 
+
     if (getline(dateStream, temp, delimiter)){
         this->year = std::stoi(temp);
     } else {
-        throw std::invalid_argument(ARGUMENT_ERROR_MSG + std::to_string(year));
+        throw std::invalid_argument(std::string(ARGUMENT_ERROR_MSG) + "year: " + std::to_string(year));
     }
 
     if (getline(dateStream, temp, delimiter)){
         this->month = std::stoi(temp);
     } else {
-        throw std::invalid_argument(ARGUMENT_ERROR_MSG + std::to_string(year));
+        throw std::invalid_argument(std::string(ARGUMENT_ERROR_MSG) + "month: " + std::to_string(month));
     }
 
     if (getline(dateStream, temp, delimiter)){
         this->day = std::stoi(temp);
     } else {
-        throw std::invalid_argument(ARGUMENT_ERROR_MSG + std::to_string(day));
+        throw std::invalid_argument(std::string(ARGUMENT_ERROR_MSG) + "day: " + std::to_string(day));
     }
+
+    if (month < 1 || month > 12) {
+        throw std::invalid_argument(std::string(ARGUMENT_ERROR_MSG) + "Invalid month." + std::to_string(month));
+    }
+    
+    
     
 
 }

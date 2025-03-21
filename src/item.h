@@ -14,4 +14,22 @@
 #ifndef ITEM_H
 #define ITEM_H
 
+class Item {
+    private:
+        std::string ident;
+        std::string description;
+        double amount;
+        Date date;
+        std::vector<std::string> tags;
+
+    public:
+        Item(std::string ident, std::string description, double amount, Date date);
+        ~Item();
+        std::string getIdent();
+        std::string getDescription();
+        
+        void setDescription(std::string description);
+        bool addTag(std::string tag);
+};
+
 #endif // ITEM_H

@@ -98,19 +98,41 @@ Date::Date(std::string date) {
 
 }
 
-// TODO: Write a function, str, that takes no parameters and returns a
+// function str, that takes no parameters and returns a
 // std::string representation of the Date object in YYYY-MM-DD format.  
 // Example:
 //  Date d = Date(2024,12,25);
 //  std::cout << d.str() << std::endl;
 
-// TODO:: create a function setDate, that takes three parameters: year, month,
+
+std::string Date::str() const {
+        std::ostringstream oss;
+        oss << year << "-" << month << "-"<< day;
+        return oss.str();
+    }
+    
+
+// function setDate, that takes three parameters: year, month,
 // day and sets the appropriate member variables to those parameters.
 // Example:
 //  Date d = Date();
 //  d.setDate(2024, 12, 25);
 
-// TODO:: Write a function, getYear, that takes no parameters and returns year
+// TODO: again this function  similarly to the constructor
+// does not check for leap years, valid days in month
+void Date::setDate(unsigned int year, unsigned int month, unsigned int day) {
+    if (month < 1 || month > 12) {
+        throw std::invalid_argument(std::string(ARGUMENT_ERROR_MSG) + "Invalid month.");
+    }
+    this->year = year;
+    this->month = month;
+    this->day = day;
+}
+
+    
+
+
+// Write a function, getYear, that takes no parameters and returns year
 // member variable
 // Example:
 //  Date d = Date();
@@ -120,7 +142,7 @@ unsigned int Date::getYear() const {
     return this->year;
 }
 
-// TODO: Write a function, getMonth, that takes no parameters and returns month
+// a function, getMonth, that takes no parameters and returns month
 // member variable
 // Example:
 //  Date d = Date();
@@ -130,7 +152,7 @@ unsigned int Date::getMonth() const {
     return this->month;
 }
 
-// TODO: Write a function, getDay, that takes no parameters and returns day
+// a function, getDay, that takes no parameters and returns day
 // member variable
 // Example:
 //  Date d = Date();
@@ -140,7 +162,7 @@ unsigned int Date::getDay() const {
     return this->day;
 }
 
-// TODO: Write an == operator overload for the Date class, such that two
+// an == operator overload for the Date class, such that two
 // Date objects are equal only if they have the same member variables.
 // Example:
 //  Date d1 = Date(2024, 12, 25);
@@ -158,7 +180,7 @@ bool operator== (const Date &lhs, const Date &rhs) {
         return false;
 }
 
-// TODO: Write an < operator overload for the Date class, that returns true if
+// an < operator overload for the Date class, that returns true if
 // the first Date object is chronologically before the second date object.
 // Otherwise return false. 
 // Example:
@@ -188,6 +210,3 @@ bool operator<(const Date &lhs, const Date &rhs) {
 }
 
 
-//std::ostream opeartor<<(const Date &date) {
-
-//}

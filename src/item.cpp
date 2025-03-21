@@ -7,40 +7,74 @@
 // Canvas: https://canvas.swansea.ac.uk/courses/52781
 // -----------------------------------------------------
 
-#include "item.h"
+#include <vector>
 
-// TODO: Write a constructor that takes four parameters, a string identifier,
+#include "item.h"
+#include "date.h"
+
+
+
+// a constructor that takes four parameters, a string identifier,
 // a description, an amount, and a date and initialises the object and member data.
 //
 // Example:
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 
-// TODO: Write a function, getIdent, that returns the identifier for the Item.
+Item::Item(std::string ident, std::string description, double amount, Date date) :
+    ident(ident), description(description), amount(amount), date(date) {}
+
+
+Item::~Item(){}
+
+// function getIdent, that returns the identifier for the Item.
 //
 // Example:
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
-//  auto ident = iObj.getIdent();
+//  auto ident = iObj.getIdent(); = 1
 
-// TODO: Write a function, getDescription, that returns the description for the Item.
+std::string Item::getIdent() {
+    return this->ident;
+}
+
+// function getDescription, that returns the description for the Item.
 //
 // Example:
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  auto ident = iObj.getDescription();
 
-// TODO: Write a function, setDescription, that takes one parameter, a string for a new
+std::string Item::getDescription() {
+    return this->description;
+}
+
+
+// Function, setDescription, that takes one parameter, a string for a new
 //  Item description, and updates the member variable. It returns nothing.
 //
 // Example:
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  auto ident = iObj.setDescription("New Item Description");
 
-// TODO: Write a function, addTag, that takes one parameters, a tag
+void Item::setDescription(std::string description) {
+    this->description = description;
+}
+
+// Function, addTag, that takes one parameters, a tag
 //  string and returns true if the entry was inserted into the
 //  container or false if the tag already existed.
-//
-// Example:
-//  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
-//  iObj.addTag("tag");
+
+bool Item::addTag(std::string tag) {
+    auto iterator = find(tags.begin(), tags.end(), tag);
+
+    if (iterator != tags.end()) {
+        tags.push_back(tag);
+        return true;
+    }
+    return false;
+}
+
+
+
+
 
 // TODO: Write a function, deleteTag, that takes one parameter, a tag
 // string, deletes it from the container, and returns true if the tag
@@ -51,6 +85,16 @@
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  iObj.addTag("tag");
 //  iObj.deleteTag("tag");
+
+
+
+
+
+
+
+
+
+
 
 // TODO: Write a function, numTags, that takes no parameters and returns an
 // unsigned int of the number of tags in the Item contains.

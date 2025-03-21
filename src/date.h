@@ -25,7 +25,11 @@ class Date {
         Date(unsigned int year, unsigned int month, unsigned int day);
         Date(std::string date);
         Date();
-        ~Date();    
+        ~Date();
+
+        std::string str() const;
+
+        void setDate(unsigned int year, unsigned int month, unsigned int day);
 
         unsigned int getYear() const;
         unsigned int getMonth() const;

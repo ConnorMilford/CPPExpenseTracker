@@ -7,12 +7,14 @@
 // Canvas: https://canvas.swansea.ac.uk/courses/52781
 // -----------------------------------------------------
 
-#include <vector>
+#include <set>
+#include <string>
 
 #include "item.h"
 #include "date.h"
 
-#define NO_ITEM_MSG "Item not found."
+
+#define NOT_FOUND_MSG "Item not found."
 
 // a constructor that takes four parameters, a string identifier,
 // a description, an amount, and a date and initialises the object and member data.
@@ -20,20 +22,20 @@
 // Example:
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 
-Item::Item(std::string ident, std::string description, double amount, Date date) :
-    ident(ident), description(description), amount(amount), date(date) {}
 
+    Item::Item(std::string ident, std::string description, double amount,Date date) {}
 
-Item::~Item(){}
+    Item::~Item() {}
 
-// function getIdent, that returns the identifier for the Item.
-//
-// Example:
-//  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
-//  auto ident = iObj.getIdent(); = 1
+    // function getIdent, that returns the identifier for the Item.
+    //
+    // Example:
+    //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
+    //  auto ident = iObj.getIdent(); = 1
 
-std::string Item::getIdent() {
-    return this->ident;
+    std::string Item::getIdent() const
+    {
+        return this->ident;
 }
 
 // function getDescription, that returns the description for the Item.
@@ -42,11 +44,27 @@ std::string Item::getIdent() {
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  auto ident = iObj.getDescription();
 
-std::string Item::getDescription() {
+std::string Item::getDescription() const {
     return this->description;
 }
 
 
+// A function, getDate, that returns the date for the Item.
+Date Item::getDate() const {
+    return this->date;
+}
+
+// Function, getAmount, that returns the amount for the Item.
+double Item::getAmount() const {
+    return amount;
+}
+
+// TODO: Write a function setAmount, that takes one parameter, a double for
+// a new amount, and updates the member variable. It returns nothing.
+
+void Item::setAmount(double amount) {
+    this->amount = amount;
+}
 // Function, setDescription, that takes one parameter, a string for a new
 //  Item description, and updates the member variable. It returns nothing.
 //
@@ -54,8 +72,16 @@ std::string Item::getDescription() {
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  auto ident = iObj.setDescription("New Item Description");
 
-void Item::setDescription(std::string description) {
+void Item::setDescription(const std::string& description) {
     this->description = description;
+}
+
+
+// TODO: Write a function setDate, that takes one parameter, a date, and updates
+// the member variable. It returns nothing.
+
+void Item::setDate(Date date) {
+    this->date = date;
 }
 
 // Function, addTag, that takes one parameters, a tag
@@ -65,8 +91,8 @@ void Item::setDescription(std::string description) {
 bool Item::addTag(std::string tag) {
     auto iterator = find(tags.begin(), tags.end(), tag);
 
-    if (iterator != tags.end()) {
-        tags.push_back(tag);
+    if (iterator == tags.end()) {
+        tags.insert(tag);
         return true;
     }
     return false;
@@ -94,16 +120,8 @@ bool Item::deleteTag(std::string tag) {
         return true;
     }
     
-    throw std::out_of_range(NO_ITEM_MSG);
+    throw std::out_of_range(NOT_FOUND_MSG);
 }
-
-
-
-
-
-
-
-
 
 
 // function, numTags, that takes no parameters and returns an
@@ -113,10 +131,9 @@ bool Item::deleteTag(std::string tag) {
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  iObj.numTags(); // 0
 
-unsigned int Item::numTags() {
+unsigned int Item::numTags() const {
     return tags.size();
 }
-
 
 
 // function, containsTag, that takes one parameter, a tag string.
@@ -127,7 +144,8 @@ unsigned int Item::numTags() {
 //  iObj.addTag("tag");
 //  iObj.containsTag("tag"); // true
 
-bool Item::containsTag(std::string tag) {
+
+bool Item::containsTag(std::string tag) const {
     auto iterator = find(tags.begin(), tags.end(), tag);
 
     if (iterator != tags.end()) {
@@ -135,27 +153,6 @@ bool Item::containsTag(std::string tag) {
     }
     return false;
 }
-
-
-
-
-
-// Function, getAmount, that returns the amount for the Item.
-double Item::getAmount() {
-    return amount;
-}
-
-// TODO: Write a function setAmount, that takes one parameter, a double for
-// a new amount, and updates the member variable. It returns nothing.
-
-void Item::setAmount(double amount) {
-    this->amount = amount;
-}
-
-// TODO: Write a function, getDate, that returns the date for the Item.
-
-// TODO: Write a function setDate, that takes one parameter, a date, and updates
-// the member variable. It returns nothing.
 
 // TODO: Write an == operator overload for the Item class, such that two
 // Item objects are equal only if they have the same identifier, date,

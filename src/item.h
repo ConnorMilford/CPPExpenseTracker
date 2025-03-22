@@ -14,32 +14,43 @@
 #ifndef ITEM_H
 #define ITEM_H
 
+#include <string>
+#include <set>
+
+
+#include "date.h"
+
+
 class Item {
     private:
         std::string ident;
         std::string description;
         double amount;
         Date date;
-        std::vector<std::string> tags;
+        std::set<std::string> tags;
 
     public:
         Item(std::string ident, std::string description, double amount, Date date);
         ~Item();
 
-        std::string getIdent();
-        std::string getDescription();
-        double getAmount();
-        
+        // getters should be const to 
+        std::string getIdent() const;
+        std::string getDescription() const ;
+        double getAmount() const; 
+        Date getDate() const;
 
-        void setDescription(std::string description);
+        void setDescription(const std::string &description);
+        void setDate(Date date);
         void setAmount(double amount);
 
         bool addTag(std::string tag);
+        bool containsTag(std::string tag) const;
         bool deleteTag(std::string tag);
-        bool containsTag(std::string tag);
-        unsigned int numTags();
+        unsigned int numTags() const;
+        
         
         
 };
 
 #endif // ITEM_H
+

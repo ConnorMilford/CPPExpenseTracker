@@ -14,6 +14,8 @@
 
 #ifndef DATE_H
 
+#include <string>
+
 #define DATE_H
 
 class Date {

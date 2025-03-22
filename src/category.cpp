@@ -6,27 +6,51 @@
 //
 // Canvas: https://canvas.swansea.ac.uk/courses/52781
 // -----------------------------------------------------
+#include <string>
 
 #include "category.h"
+#include "item.h"
 
-// TODO:: Write a constructor that takes one parameter, a string identifier and
+
+// A constructor that takes one parameter, a string identifier and
 // initialises the object and member data.
 //
 // Example:
 //  Category c{"categoryIdent"};
+
+Category::Category(std::string ident) : identifier(ident) {
+
+}
+
+
+Category::~Category(){
+    
+}
 
 // TODO: Write a function, size, that takes no parameters and returns an unsigned
 // int of the number of Items in the Category contains.
 //
 // Example:
 //  Category c{"categoryIdent"};
-//  auto size = c.size();
+//  unsigned int size = c.size();
+
+unsigned int Category::size(){
+    return this->items.size();
+}
+
+
+
+
 
 // TODO: Write a function, getIdent, that returns the identifier for the Category.
 //
 // Example:
 //  Category cObj{"categoryIdent"};
-//  auto ident = cObj.getIdent();
+//  std::string ident = cObj.getIdent();
+
+std::string Category::getIdent() const {
+    return this->identifier;
+}
 
 // TODO: Write a function, setIdent, that takes one parameter, a string for a new
 // Category identifier, and updates the member variable. It returns nothing.
@@ -35,6 +59,9 @@
 //  Category cObj{"categoryIdent"};
 //  cObj.setIdent("categoryIdent2");
 
+void Category::setIdent(const std::string &ident) {
+    this->identifier = ident;
+}
 // TODO: Write a function, newItem, that takes four parameters, an Item
 // identifier (string), description (string), amount (double), and date (Date)
 // and returns the Item object as a reference.  If an object with the same
@@ -45,6 +72,9 @@
 // Example:
 //  Category cObj{"categoryIdent"};
 //  cObj.newItem("newItemName");
+
+
+
 
 // TODO: Write a function, addItem, that takes one parameter, an Item object, and
 // returns true if the object was successfully inserted. If an object with the
@@ -110,3 +140,6 @@
 // Example:
 //  Category cObj{"categoryIdent"};
 //  std::string s = cObj.str();
+
+
+

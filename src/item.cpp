@@ -23,7 +23,8 @@
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 
 
-    Item::Item(std::string ident, std::string description, double amount,Date date) {}
+    Item::Item(std::string ident, std::string description, double amount, Date date) : 
+        ident(ident), description(description), amount(amount), date(date) {}
 
     Item::~Item() {}
 

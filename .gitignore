@@ -2,3 +2,5 @@
 build.*
 .vscode/settings.json
 /bin/*
+tests/test.h
+tests/test4.cpp

@@ -17,7 +17,12 @@
 // -----------------------------------------------------
 #ifndef TEST_H
 #define TEST_H
+ 
+ #include <string.h>
+
 #include "../src/date.h"
+
+
 
 const int year = 2024;
 const int month = 12;

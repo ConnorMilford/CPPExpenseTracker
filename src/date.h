@@ -37,6 +37,8 @@ class Date {
         unsigned int getMonth() const;
         unsigned int getDay() const;
 
+        bool operator!=(const Date &other) const;
+
         //friend std::ostream &operator<<(std::ostream &os, const Date& date);
 
         friend bool operator==(const Date &lhs, const Date &rhs);

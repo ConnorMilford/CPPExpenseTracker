@@ -210,4 +210,6 @@ bool operator<(const Date &lhs, const Date &rhs) {
     return lhs.getDay() < rhs.getDay();
 }
 
-
+bool Date::operator!=(const Date& other) const {
+        return this->day != other.day || this->month != other.month || this->year != other.year;
+    }

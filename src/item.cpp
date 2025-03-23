@@ -9,6 +9,8 @@
 
 #include <set>
 #include <string>
+#include <stdexcept>
+
 
 #include "item.h"
 #include "date.h"
@@ -21,7 +23,7 @@
 //
 // Example:
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
-
+    
 
     Item::Item(std::string ident, std::string description, double amount, Date date) : 
         ident(ident), description(description), amount(amount), date(date) {}
@@ -53,6 +55,11 @@ std::string Item::getDescription() const {
 // A function, getDate, that returns the date for the Item.
 Date Item::getDate() const {
     return this->date;
+}
+
+std::set<std::string> Item::getTags() const
+{
+    return this->tags;
 }
 
 // Function, getAmount, that returns the amount for the Item.
@@ -155,6 +162,26 @@ bool Item::containsTag(std::string tag) const {
     return false;
 }
 
+// merge the sets of two tags
+void Item::mergeTags(const std::set<std::string> newTags) {
+    tags.insert(newTags.begin(), newTags.end());
+}
+
+// get the tags of an item
+// should only be used with merge tags.
+
+
+
+
+
+
+bool Item::operator!=(const Item& other) const {
+    return this->ident != other.ident ||
+           this->description != other.description ||
+           this->amount != other.amount ||
+           this->date != other.date;
+}
+
 // TODO: Write an == operator overload for the Item class, such that two
 // Item objects are equal only if they have the same identifier, date,
 // amount, description, and tags.
@@ -164,6 +191,13 @@ bool Item::containsTag(std::string tag) const {
 //  if(iObj1 == iObj2) {
 //   ...
 //  }
+bool Item::operator==(const Item& other) const {
+    return this->ident == other.ident &&
+           this->description == other.description &&
+           this->amount == other.amount &&
+           this->date == other.date;
+}
+
 
 // TODO: Write a function, str, that takes no parameters and returns a
 // std::string of the JSON representation of the data in the Item.

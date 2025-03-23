@@ -14,7 +14,8 @@
 #define CATEGORY_H
 
 #include <string>
-#include <vector>
+#include <unordered_map>
+
 
 #include "item.h"
  
@@ -23,7 +24,7 @@ class Category {
 
     private:
     std::string identifier;
-    std::vector<Item> items;
+    std::unordered_map<std::string, Item> items;
 
     public:
     Category(std::string categoryIdent);
@@ -33,7 +34,15 @@ class Category {
     std::string getIdent() const;
     void setIdent(const std::string &ident);
 
+    Item& newItem(const std::string &ident, const std::string &description,
+                              double amount, const Date &date);
+    bool addItem(const Item &item);
+    Item& getItem(const std::string &ident);
+    bool deleteItem(const std::string &ident);
+
+    double getSum();
     
+    bool operator==(const Category &cat) const;
 };
 
 #endif // CATEGORY_H

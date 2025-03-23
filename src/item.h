@@ -33,11 +33,12 @@ class Item {
         Item(std::string ident, std::string description, double amount, Date date);
         ~Item();
 
-        // getters should be const to 
+        
         std::string getIdent() const;
         std::string getDescription() const ;
         double getAmount() const; 
         Date getDate() const;
+        std::set<std::string> getTags() const;
 
         void setDescription(const std::string &description);
         void setDate(Date date);
@@ -45,11 +46,12 @@ class Item {
 
         bool addTag(std::string tag);
         bool containsTag(std::string tag) const;
+        void mergeTags(const std::set<std::string> tags);
         bool deleteTag(std::string tag);
         unsigned int numTags() const;
-        
-        
-        
+
+        bool operator!=(const Item &other) const;
+        bool operator==(const Item &other) const;
 };
 
 #endif // ITEM_H

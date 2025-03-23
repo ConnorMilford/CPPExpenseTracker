@@ -11,11 +11,25 @@
 // which have a description, amount, and date
 // -----------------------------------------------------
 
+
 #ifndef EXPENSETRACKER_H
 #define EXPENSETRACKER_H
 
-class ExpenseTracker {
+#include <unordered_set>
 
+#include "category.h"
+
+
+class ExpenseTracker {
+    private:
+    std::unordered_set<Category> categories;
+
+    public:
+        ExpenseTracker() = default;
+        ~ExpenseTracker() = default;
+
+        unsigned int size();
+        Category &newCategory(const std::string &ident);
 };
 
 #endif // EXPENSETRACKER_H

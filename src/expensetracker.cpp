@@ -12,8 +12,9 @@
 #include <stdexcept>
 #include <string>
 #include <utility>
+#include <algorithm>
 
-// TODO: Write a ExpenseTracker constructor that takes no parameters and constructs an
+// An ExpenseTracker constructor that takes no parameters and constructs an
 //  an ExpenseTracker object
 //
 // Example:
@@ -26,6 +27,10 @@
 //  ExpenseTracker etObj{};
 //  auto size = etObj.size();
 
+unsigned int ExpenseTracker::size() {
+    return categories.size();
+}
+
 // TODO: Write a function, newCategory, that takes one parameter, a category
 //  identifier, and returns the Category object as a reference. If an object
 //  with the same identifier already exists, then the existing object should be
@@ -35,6 +40,22 @@
 // Example:
 //  ExpenseTracker etObj{};
 //  etObj.newCategory("categoryIdent");
+
+Category& ExpenseTracker::newCategory(const std::string &ident) {
+    auto iterator = categories.find(Category(ident)); // temp object to use find
+
+    // if doesnt exist
+    if (iterator == categories.end()) {
+        auto [it, inserted] = categories.emplace(ident);
+        if (!inserted) {
+            throw std::runtime_error("Failed to insert category: " + ident);
+        }
+        return const_cast<Category&>(*it);  // returns a mutable reference
+    } 
+
+    return const_cast<Category&>(*iterator);
+}
+
 
 // TODO: Write a function, addCategory, that takes one parameter, a Category
 //  object, and returns true if the object was successfully inserted. If an

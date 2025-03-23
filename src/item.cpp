@@ -10,7 +10,7 @@
 #include <set>
 #include <string>
 #include <stdexcept>
-
+#include <algorithm>
 
 #include "item.h"
 #include "date.h"

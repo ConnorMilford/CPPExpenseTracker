@@ -1,12 +1,3 @@
-// -----------------------------------------------------
-// CSC371 Advanced Object Oriented Programming (2024/25)
-// Department of Computer Science, Swansea University
-//
-// Author: <2214497 - Connor Milford>
-//
-// Canvas: https://canvas.swansea.ac.uk/courses/52781
-// -----------------------------------------------------
-#include "expensetracker.h"
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
@@ -14,13 +5,19 @@
 #include <utility>
 #include <algorithm>
 
+#include "expensetracker.h"
+#include "category.h"
+
+#define INSERT_UNSUCCESSFUL "Failed to insert or overwrite Category"
+#define NO_SUCH_CATEGORY "No such category exists"
+
 // An ExpenseTracker constructor that takes no parameters and constructs an
 //  an ExpenseTracker object
 //
 // Example:
 //  ExpenseTracker etObj{};
 
-// TODO: Write a function, size, that takes no parameters and returns an unsigned
+// A function, size, that takes no parameters and returns an unsigned
 //  int of the number of categories the ExpenseTracker contains.
 //
 // Example:
@@ -31,7 +28,7 @@ unsigned int ExpenseTracker::size() {
     return categories.size();
 }
 
-// TODO: Write a function, newCategory, that takes one parameter, a category
+// A function, newCategory, that takes one parameter, a category
 //  identifier, and returns the Category object as a reference. If an object
 //  with the same identifier already exists, then the existing object should be
 //  returned. Throw a std::runtime_error if the Category object cannot be
@@ -42,34 +39,53 @@ unsigned int ExpenseTracker::size() {
 //  etObj.newCategory("categoryIdent");
 
 Category& ExpenseTracker::newCategory(const std::string &ident) {
-    auto iterator = categories.find(Category(ident)); // temp object to use find
+    Category cat = Category(ident);
+    auto iterator = categories.find(Category(cat)); // temp object to use find
 
-    // if doesnt exist
+    // if doesn't exist
     if (iterator == categories.end()) {
-        auto [it, inserted] = categories.emplace(ident);
+        auto result = categories.emplace(Category(cat));
+        auto it = result.first;
+        bool inserted = result.second;
+        
         if (!inserted) {
-            throw std::runtime_error("Failed to insert category: " + ident);
+            throw std::runtime_error(INSERT_UNSUCCESSFUL);
         }
-        return const_cast<Category&>(*it);  // returns a mutable reference
-    } 
+        return const_cast<Category&>(*it);  // returns a mutable reference to item if found
+    }
 
-    return const_cast<Category&>(*iterator);
+    return const_cast<Category&>(*iterator); // else returns mutable reference to new object 
 }
 
-
-// TODO: Write a function, addCategory, that takes one parameter, a Category
+// A function, addCategory, that takes one parameter, a Category
 //  object, and returns true if the object was successfully inserted. If an
 //  object with the same identifier already exists, then the contents should be
 //  merged (see also Category::addItem) and then returns false. Throw a
-//  std::runtime_error if the Category object cannot be inserted into the
-//  container for whatever reason.
+//  std::runtime_error if the Category object cannot be inserted into the container for whatever reason.
 //
 // Example:
 //  ExpenseTracker etObj{};
 //  Category cObj{"categoryIdent"};
 //  etObj.addCategory(cObj);
 
-// TODO: Write a function, getCategory, that takes one parameter, a Category
+bool ExpenseTracker::addCategory(Category cat) {
+    auto iterator = categories.find(cat);
+
+    if (iterator == categories.end()) {
+        auto result = categories.emplace(cat);
+        auto it = result.first;
+        bool inserted = result.second;
+        
+        if (!inserted) {
+            throw std::runtime_error(INSERT_UNSUCCESSFUL);
+        }
+        return true;   
+    }
+    return false;
+}
+
+
+// A function, getCategory, that takes one parameter, a Category
 //  identifier and returns the Category with that identifier. If no Category
 //  exists, throw an appropriate exception.
 //
@@ -78,8 +94,17 @@ Category& ExpenseTracker::newCategory(const std::string &ident) {
 //  etObj.newCategory("categoryIdent");
 //  auto cObj = etObj.getCategory("categoryIdent");
 
-// TODO: Write a function, deleteCategory, that takes one parameter, a Category
-//  identifier, and deletes that catagory from the container, and returns true
+Category& ExpenseTracker::getCategory(const std::string& ident) const {
+    auto iterator = categories.find(Category(ident));
+
+    if (iterator == categories.end()) {
+        throw std::out_of_range(NO_SUCH_CATEGORY);
+    } 
+    return const_cast<Category&>(*iterator);
+}
+
+// A function, deleteCategory, that takes one parameter, a Category
+//  identifier, and deletes that category from the container, and returns true
 //  if the Category was deleted. If no Category exists, throw an appropriate
 //  exception.
 //
@@ -88,9 +113,19 @@ Category& ExpenseTracker::newCategory(const std::string &ident) {
 //  etObj.newCategory("categoryIdent");
 //  etObj.deleteCategory("categoryIdent");
 
-// TODO: Write a function, getSum, that returns the sum of all Category expense
+bool ExpenseTracker::deleteCategory(std::string ident) {
+    auto iterator = categories.find(Category(ident));
+
+    if (iterator == categories.end()) {
+        throw std::out_of_range(NO_SUCH_CATEGORY);
+    } 
+    categories.erase(iterator);
+    return true;
+}
+
+// A function, getSum, that returns the sum of all Category expense
 // sums. This consists of the sum of all individual item amounts across all categories.
-// If no categories or no items exists return 0.
+// If no categories or no items exist return 0.
 //
 // Example:
 //  ExpenseTracker etObj{};
@@ -101,6 +136,23 @@ Category& ExpenseTracker::newCategory(const std::string &ident) {
 //  cObj2.newItem("newItemName3", "Description", "3.0", Date(2024,12,25));
 //  cObj2.newItem("newItemName4", "Description", "4.0", Date(2024,12,25));
 //  auto sum = ejObj.getSum() // 10.0
+
+double ExpenseTracker::getSum() const {
+    if (categories.empty()) {
+        return 0.0;
+    }
+
+    double totalSum = 0.0;
+
+    std::for_each(
+        categories.begin(), categories.end(),
+        [&totalSum](const Category& cat) {
+            totalSum += cat.getSum();
+        }
+    );
+
+    return totalSum;
+}
 
 // TODO: Write a function, load, that takes one parameter, a std::string,
 //  containing the filename for the database. Open the file, read the contents,

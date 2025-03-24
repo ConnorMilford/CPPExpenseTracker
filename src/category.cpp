@@ -179,7 +179,7 @@ Item& Category::getItem(const std::string &ident) {
 //  cObj.newItem("newItemName2", "Description", "2.0", Date(2024,12,25));
 //  auto sum = cObj.getSum() // 3.0
 
-double Category::getSum() {
+double Category::getSum() const {
     
     double totalAmount = std::accumulate(
         items.begin(), items.end(), 0.0,  
@@ -250,6 +250,8 @@ bool Category::operator==(const Category& cat) const {
 }
 
 
+
+
 // TODO: Write a function, str, that takes no parameters and returns a
 // std::string of the JSON representation of the data in the Category.
 //
@@ -258,6 +260,7 @@ bool Category::operator==(const Category& cat) const {
 // Example:
 //  Category cObj{"categoryIdent"};
 //  std::string s = cObj.str();
+
 
 
 

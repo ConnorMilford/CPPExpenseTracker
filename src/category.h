@@ -40,9 +40,18 @@ class Category {
     Item& getItem(const std::string &ident);
     bool deleteItem(const std::string &ident);
 
-    double getSum();
+    double getSum() const;
     
     bool operator==(const Category &cat) const;
 };
+
+namespace std {
+    template <>
+    struct hash<Category> {
+        size_t operator()(const Category& cat) const {
+            return hash<std::string>()(cat.getIdent()); 
+        }
+    };
+}
 
 #endif // CATEGORY_H

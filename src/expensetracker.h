@@ -29,7 +29,13 @@ class ExpenseTracker {
         ~ExpenseTracker() = default;
 
         unsigned int size();
+
         Category &newCategory(const std::string &ident);
+        bool addCategory(Category cat);
+        Category &getCategory(const std::string &ident) const;
+        bool deleteCategory(std::string ident);
+
+        double getSum() const;
 };
 
 #endif // EXPENSETRACKER_H

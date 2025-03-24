@@ -169,7 +169,7 @@ Item& Category::getItem(const std::string &ident) {
 
 
 
-
+// TODO: FIX 
 // A function, getSum, that returns the sum of all Item amounts in
 // the category. If no Item exists return 0.
 //
@@ -180,15 +180,13 @@ Item& Category::getItem(const std::string &ident) {
 //  auto sum = cObj.getSum() // 3.0
 
 double Category::getSum() const {
-    
-    double totalAmount = std::accumulate(
-        items.begin(), items.end(), 0.0,  
-        [](double sum, const std::pair<const std::string, Item>& pair) {
-            return sum + pair.second.getAmount();  
-        }
-    );
-    
-    return totalAmount;
+    double sum = 0.0;
+
+    for (auto it = items.begin(); it != items.end(); ++it) {
+        sum += it->second.getAmount();
+    }
+
+    return sum;
 }
 
 

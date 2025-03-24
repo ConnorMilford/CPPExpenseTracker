@@ -39,23 +39,23 @@ unsigned int ExpenseTracker::size() {
 //  etObj.newCategory("categoryIdent");
 
 Category& ExpenseTracker::newCategory(const std::string &ident) {
-    Category cat = Category(ident);
-    auto iterator = categories.find(Category(cat)); // temp object to use find
+    auto it = categories.find(Category(ident));
 
-    // if doesn't exist
-    if (iterator == categories.end()) {
-        auto result = categories.emplace(Category(cat));
-        auto it = result.first;
-        bool inserted = result.second;
-        
-        if (!inserted) {
-            throw std::runtime_error(INSERT_UNSUCCESSFUL);
-        }
-        return const_cast<Category&>(*it);  // returns a mutable reference to item if found
+    if (it != categories.end()) {
+        return const_cast<Category&>(*it);
     }
 
-    return const_cast<Category&>(*iterator); // else returns mutable reference to new object 
+    auto result = categories.emplace(Category(ident));
+
+    // result is std::pair<iterator, bool>
+    if (!result.second) {  
+        throw std::runtime_error(INSERT_UNSUCCESSFUL);
+    }
+
+    return const_cast<Category&>(*result.first);
 }
+
+
 
 // A function, addCategory, that takes one parameter, a Category
 //  object, and returns true if the object was successfully inserted. If an
@@ -94,14 +94,17 @@ bool ExpenseTracker::addCategory(Category cat) {
 //  etObj.newCategory("categoryIdent");
 //  auto cObj = etObj.getCategory("categoryIdent");
 
-Category& ExpenseTracker::getCategory(const std::string& ident) const {
-    auto iterator = categories.find(Category(ident));
+Category& ExpenseTracker::getCategory(const std::string& ident) {
+    for (auto it = categories.begin(); it != categories.end(); ++it) {
+        if (it->getIdent() == ident) {
+            return const_cast<Category&>(*it);
+        }
+    }
 
-    if (iterator == categories.end()) {
-        throw std::out_of_range(NO_SUCH_CATEGORY);
-    } 
-    return const_cast<Category&>(*iterator);
+    // If no matching category is found, throw an exception
+    throw std::out_of_range(NO_SUCH_CATEGORY);
 }
+
 
 // A function, deleteCategory, that takes one parameter, a Category
 //  identifier, and deletes that category from the container, and returns true
@@ -137,19 +140,13 @@ bool ExpenseTracker::deleteCategory(std::string ident) {
 //  cObj2.newItem("newItemName4", "Description", "4.0", Date(2024,12,25));
 //  auto sum = ejObj.getSum() // 10.0
 
-double ExpenseTracker::getSum() const {
-    if (categories.empty()) {
-        return 0.0;
-    }
 
+double ExpenseTracker::getSum() const {
     double totalSum = 0.0;
 
-    std::for_each(
-        categories.begin(), categories.end(),
-        [&totalSum](const Category& cat) {
-            totalSum += cat.getSum();
-        }
-    );
+    for (const auto& category : categories) {
+        totalSum += category.getSum();
+    }
 
     return totalSum;
 }
@@ -227,6 +224,11 @@ double ExpenseTracker::getSum() const {
 //  etObj.load("database.json");
 //  ...
 //  etObj.save("database.json");
+
+ExpenseTracker::load() {}
+
+
+
 
 // TODO: Write an == operator overload for the ExpenseTracker class, such that two
 //  ExpenseTracker objects are equal only if they have the exact same data.

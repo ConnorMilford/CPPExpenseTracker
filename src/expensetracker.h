@@ -32,7 +32,7 @@ class ExpenseTracker {
 
         Category &newCategory(const std::string &ident);
         bool addCategory(Category cat);
-        Category &getCategory(const std::string &ident) const;
+        Category &getCategory(const std::string &ident);
         bool deleteCategory(std::string ident);
 
         double getSum() const;

@@ -67,7 +67,7 @@ double Item::getAmount() const {
     return amount;
 }
 
-// TODO: Write a function setAmount, that takes one parameter, a double for
+// A function setAmount, that takes one parameter, a double for
 // a new amount, and updates the member variable. It returns nothing.
 
 void Item::setAmount(double amount) {
@@ -85,7 +85,7 @@ void Item::setDescription(const std::string& description) {
 }
 
 
-// TODO: Write a function setDate, that takes one parameter, a date, and updates
+// A function setDate, that takes one parameter, a date, and updates
 // the member variable. It returns nothing.
 
 void Item::setDate(Date date) {

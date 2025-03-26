@@ -36,6 +36,11 @@ class ExpenseTracker {
         bool deleteCategory(std::string ident);
 
         double getSum() const;
+
+        void load(const std::string& jsonString);
+        void save(const std::string &filePath) const;
+
+        std::string str() const;
 };
 
 #endif // EXPENSETRACKER_H

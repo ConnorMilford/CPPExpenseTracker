@@ -28,7 +28,6 @@ class Item {
         double amount;
         Date date;
         std::set<std::string> tags;
-
     public:
         Item(std::string ident, std::string description, double amount, Date date);
         ~Item();
@@ -52,6 +51,7 @@ class Item {
 
         bool operator!=(const Item &other) const;
         bool operator==(const Item &other) const;
+        std::string str() const; 
 };
 
 #endif // ITEM_H

@@ -11,7 +11,7 @@
 #include <sstream>
 #include <regex>
 #include <string>
-
+#include <iomanip>
 
 #include "date.h"
 
@@ -108,7 +108,9 @@ Date::Date(std::string date) {
 
 std::string Date::str() const {
         std::ostringstream oss;
-        oss << year << "-" << month << "-"<< day;
+        oss << year << "-" 
+        << std::setfill('0') << std::setw(2) << month << "-" 
+        << std::setfill('0') << std::setw(2) << day;
         return oss.str();
     }
     

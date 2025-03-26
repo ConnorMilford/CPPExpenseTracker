@@ -4,12 +4,24 @@
 #include <string>
 #include <utility>
 #include <algorithm>
+#include <fstream>
+#include <vector>
+#include <sstream>
+#include <iostream>
+
+
 
 #include "expensetracker.h"
 #include "category.h"
 
-#define INSERT_UNSUCCESSFUL "Failed to insert or overwrite Category"
-#define NO_SUCH_CATEGORY "No such category exists"
+#include "lib_json.hpp" 
+
+#define INSERT_UNSUCCESSFUL "Failed to insert or overwrite Category "
+#define NO_SUCH_CATEGORY "No such category exists "
+#define JSON_PARSE_ERROR "Error when parsing json "
+#define FILE_OPEN_ERROR "Error opening file "
+
+using json = nlohmann::json;
 
 // An ExpenseTracker constructor that takes no parameters and constructs an
 //  an ExpenseTracker object
@@ -151,7 +163,7 @@ double ExpenseTracker::getSum() const {
     return totalSum;
 }
 
-// TODO: Write a function, load, that takes one parameter, a std::string,
+// A function, load, that takes one parameter, a std::string,
 //  containing the filename for the database. Open the file, read the contents,
 //  and populates the container for this ExpenseTracker. If the file does not open throw
 //  an appropriate exception (either std::runtime_error or a derived class).
@@ -215,6 +227,61 @@ double ExpenseTracker::getSum() const {
 //  ExpenseTracker etObj{};
 //  etObj.load("database.json");
 
+// APPROACH 
+// Iterate over json 
+// Each key is a category name
+// Nested values are items
+//
+//
+
+void ExpenseTracker::load(const std::string& filePath) {
+    try {
+       
+        // check file exists
+        std::ifstream f(filePath);
+        if (!f.is_open()) { 
+            throw std::runtime_error(FILE_OPEN_ERROR + filePath);
+        }
+
+        // parse json
+        json data;
+        try {
+            f >> data;  
+        } catch (const json::parse_error& e) {
+            throw std::runtime_error(JSON_PARSE_ERROR + std::string(": ") + e.what());
+        }
+
+        
+        for (auto it = data.begin(); it != data.end(); ++it) {
+            // parse category
+            const std::string& catIdent = it.key();
+            Category& cat = newCategory(catIdent);
+
+            for (auto itemsIt = it.value().begin(); itemsIt != it.value().end(); ++itemsIt) {
+                const std::string& itemIdent = itemsIt.key();
+                const auto& itemDetails = itemsIt.value();
+
+                // parse item 
+                double amount = itemDetails["amount"].get<double>();
+                std::string dateStr = itemDetails["date"].get<std::string>();
+                std::string description = itemDetails["description"].get<std::string>();
+
+                Item& item = cat.newItem(itemIdent, description, amount, Date(dateStr));
+
+                // add tags 
+                const auto& tags = itemDetails["tags"];
+                for (const auto& tag : tags) {
+                    item.addTag(tag.get<std::string>());
+                }
+            }
+        }
+    } catch (const std::exception& e) {
+        throw std::runtime_error("ERROR: " + std::string(e.what()));
+    }
+}
+
+
+
 // TODO: Write a function, save, that takes one parameter, the path of the file
 //  to write the database to. The function should serialise the ExpenseTracker object
 //  as JSON.
@@ -225,7 +292,29 @@ double ExpenseTracker::getSum() const {
 //  ...
 //  etObj.save("database.json");
 
-ExpenseTracker::load() {}
+// use ofstream instead of
+// nlohmann json since it gives better control, and json lib was returning errors. 
+
+void ExpenseTracker::save(const std::string& filePath) const {
+    std::ofstream outFile(filePath);
+    if (!outFile.is_open()) {
+        throw std::runtime_error("Failed to open file: " + filePath);
+    }
+
+    try {
+            // append the string representation of this object to the outfile
+            outFile << this->str();     
+            outFile.close();   
+        if (!outFile) {
+            throw std::runtime_error("Failed to write data to file: " + filePath);
+        }
+    } catch (std::exception &e) {
+        if (outFile.is_open()) {
+            outFile.close();  // close file if open and error occurs
+        }
+        throw std::runtime_error("Error when parsing file");  
+    }
+}
 
 
 
@@ -250,4 +339,33 @@ ExpenseTracker::load() {}
 //  ExpenseTracker etObj{};
 //  std::string s = etObj.str();
 
-// hell yeah all tests passed 
+std::string ExpenseTracker::str() const {
+    nlohmann::json j;
+    for (const Category& category : categories) {
+        nlohmann::json categoryJson;
+        for (const auto& itemPair : category.getItems()) {
+            const std::string itemId = itemPair.first;
+            const Item& item = itemPair.second;
+            
+            nlohmann::json itemJson;
+            itemJson["amount"] = item.getAmount();
+            itemJson["date"] = item.getDate().str();
+            itemJson["description"] = item.getDescription();
+            
+            nlohmann::json tagsJson = nlohmann::json::array();
+            for (const auto& tag : item.getTags()) {
+                tagsJson.push_back(tag);
+            }
+            itemJson["tags"] = tagsJson;
+            
+            categoryJson[itemId] = itemJson;
+        }
+        
+        j[category.getIdent()] = categoryJson;
+    }
+    
+    return j.dump(0);
+}
+
+
+

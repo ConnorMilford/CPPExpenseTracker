@@ -11,10 +11,11 @@
 #include <string>
 #include <stdexcept>
 #include <algorithm>
+#include <sstream>
 
 #include "item.h"
 #include "date.h"
-
+#include "lib_json.hpp"
 
 #define NOT_FOUND_MSG "Item not found."
 
@@ -205,3 +206,14 @@ bool Item::operator==(const Item& other) const {
 // Example:
 //  Item iObj{"itemIdent"};
 //  std::string s = iObj.str();
+
+// use nlohmann json conversion 
+// instead of ostringstreams.
+std::string Item::str() const {
+        nlohmann::json j;
+        j["amount"] = amount;
+        j["date"] = date.str();
+        j["description"] = description;
+        j["tags"] = tags;  
+        return j.dump();   
+} 

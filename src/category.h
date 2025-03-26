@@ -38,11 +38,15 @@ class Category {
                               double amount, const Date &date);
     bool addItem(const Item &item);
     Item& getItem(const std::string &ident);
+    std::unordered_map<std::string, Item> getItems() const;
     bool deleteItem(const std::string &ident);
 
     double getSum() const;
     
     bool operator==(const Category &cat) const;
+
+    std::string str() const;
+
 };
 
 namespace std {

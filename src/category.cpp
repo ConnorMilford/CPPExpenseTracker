@@ -11,8 +11,9 @@
 #include <unordered_map>
 #include <stdexcept>
 #include <algorithm>
+#include <sstream>
 
-
+#include "lib_json.hpp"
 #include "category.h"
 #include "item.h"
 
@@ -165,6 +166,9 @@ Item& Category::getItem(const std::string &ident) {
 
 }
 
+std::unordered_map<std::string, Item> Category::getItems() const {
+    return items;
+}
 
 
 
@@ -259,6 +263,16 @@ bool Category::operator==(const Category& cat) const {
 //  Category cObj{"categoryIdent"};
 //  std::string s = cObj.str();
 
+std::string Category::str() const {
+        nlohmann::json j;
+
+        for (const auto& pair : items) {
+            const std::string& id = pair.first;
+            const Item& item = pair.second;
+            j[id] = nlohmann::json::parse(item.str());
+        }
+        return j.dump();
+    }
 
 
 

@@ -14,6 +14,7 @@
 
 // TODO: Complete this function. You have been provided some skeleton code which
 //  retrieves the database file name from cxxopts.
+
 //  1. Load the database file by calling load() on a ExpenseTracker object
 //  2. Parse the 'action' argument to decide what action should be taken
 //     (json, create, sum, delete, update).  'json' and 'sum' are the easiest to implement and
@@ -44,9 +45,8 @@ int App::run(int argc, char *argv[]) {
     // Open the database and construct the ExpenseTracker
     const std::string db = args["db"].as<std::string>();
 
-    // ExpenseTracker etObj{};
-    // Only uncomment this once you have implemented the load function!
-    // etObj.load(db);
+    ExpenseTracker etObj{};
+    etObj.load(db);
 
     // try parsing arguments and exit if there is an exception
     const Action a = parseActionArgument(args);
@@ -55,7 +55,7 @@ int App::run(int argc, char *argv[]) {
         throw std::runtime_error("create not implemented");
         break;
       case Action::JSON:
-        throw std::runtime_error("json not implemented");
+        std::cout << getJSON(etObj); 
         break;
       case Action::UPDATE:
         throw std::runtime_error("update not implemented");
@@ -141,7 +141,7 @@ cxxopts::Options App::cxxoptsSetup() {
   return cxxopts;
 }
 
-// TODO: Rewrite this function so that it works. This function should
+//  Rewrite this function so that it works. This function should
 //  case-insensitively check the action argument retrieved from cxxopts and
 //  convert this to a value from the ACTION enum. If an invalid value is given
 //  in a string, throw an std::invalid_argument exception.
@@ -157,7 +157,6 @@ cxxopts::Options App::cxxoptsSetup() {
 //Function to parse clargs and convert to action enum.
 //Throws: std::invalid_argument exception  
    
-//TODO: MAKE CASE INSENSITIVE   
 App::Action App::parseActionArgument(cxxopts::ParseResult &args) {
 
   // map actions to string representation
@@ -174,7 +173,6 @@ App::Action App::parseActionArgument(cxxopts::ParseResult &args) {
   std::transform(input.begin(), input.end(), input.begin(), ::toupper);
 
   auto iterator = actionsMap.find(input);
-  // check if action in map.
   if (iterator != actionsMap.end()) {
     //returns the value from the map, e.g. CREATE.
     return iterator->second;
@@ -191,7 +189,7 @@ App::Action App::parseActionArgument(cxxopts::ParseResult &args) {
 
 
 
-// TODO: Write a function, getJSON, that returns a std::string containing the
+// A function, getJSON, that returns a std::string containing the
 // JSON representation of a ExpenseTracker object.
 //
 // This function has been implemented for you, but you may wish to adjust it.
@@ -203,12 +201,10 @@ App::Action App::parseActionArgument(cxxopts::ParseResult &args) {
 //  ExpenseTracker etObj{};
 //  std::cout << getJSON(etObj);
 std::string App::getJSON(ExpenseTracker &etObj) {
-  return "{}";
-  // Only uncomment this once you have implemented the functions used!
-  // return etObj.str();
+  return etObj.str();
 }
 
-// TODO: Write a function, getJSON, that returns a std::string containing the
+//  A function, getJSON, that returns a std::string containing the
 //  JSON representation of a specific Category in a ExpenseTracker object.
 //
 // This function has been implemented for you, but you may wish to adjust it.
@@ -222,10 +218,9 @@ std::string App::getJSON(ExpenseTracker &etObj) {
 //  std::string c = "category argument value";
 //  std::cout << getJSON(etObj, c);
 std::string App::getJSON(ExpenseTracker &etObj, const std::string &c) {
-  return "{}";
-  // Only uncomment this once you have implemented the functions used!
-  // auto cObj = etObj.getCategory(c);
-  // return cObj.str();
+  //Only uncomment this once you have implemented the functions used!
+  auto cObj = etObj.getCategory(c);
+  return "{}"; //cObj.str();
 }
 
 // TODO: Write a function, getJSON, that returns a std::string containing the
@@ -245,8 +240,7 @@ std::string App::getJSON(ExpenseTracker &etObj, const std::string &c) {
 std::string App::getJSON(ExpenseTracker &etObj, 
                          const std::string &c,
                          const std::string &id) {
-  return "{}";
   // Only uncomment this once you have implemented the functions used!
-  // auto iObj = etObj.getCategory(c).getItem(id);
-  // return iObj.str();
+  auto iObj = etObj.getCategory(c).getItem(id);
+  return "{}"; //iObj.str();
 }

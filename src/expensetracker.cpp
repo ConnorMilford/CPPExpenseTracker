@@ -8,6 +8,7 @@
 #include <vector>
 #include <sstream>
 #include <iostream>
+#include <functional>
 
 
 
@@ -340,22 +341,24 @@ void ExpenseTracker::save(const std::string& filePath) const {
 //  std::string s = etObj.str();
 
 std::string ExpenseTracker::str() const {
-    nlohmann::json j;
+    json j;
     for (const Category& category : categories) {
-        nlohmann::json categoryJson;
+        json categoryJson;
         for (const auto& itemPair : category.getItems()) {
             const std::string itemId = itemPair.first;
             const Item& item = itemPair.second;
             
-            nlohmann::json itemJson;
+            json itemJson;
             itemJson["amount"] = item.getAmount();
             itemJson["date"] = item.getDate().str();
             itemJson["description"] = item.getDescription();
             
-            nlohmann::json tagsJson = nlohmann::json::array();
-            for (const auto& tag : item.getTags()) {
+            // add reverse alphabetical
+            json tagsJson = json::array();
+            for (const std::string &tag : item.getTags()) {
                 tagsJson.push_back(tag);
             }
+            
             itemJson["tags"] = tagsJson;
             
             categoryJson[itemId] = itemJson;
@@ -364,7 +367,7 @@ std::string ExpenseTracker::str() const {
         j[category.getIdent()] = categoryJson;
     }
     
-    return j.dump(0);
+    return j.dump(-1, ' ', false) + "\n";
 }
 
 

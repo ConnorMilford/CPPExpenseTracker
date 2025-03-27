@@ -27,7 +27,7 @@ class Item {
         std::string description;
         double amount;
         Date date;
-        std::set<std::string> tags;
+        std::vector<std::string> tags;
     public:
         Item(std::string ident, std::string description, double amount, Date date);
         ~Item();
@@ -37,17 +37,20 @@ class Item {
         std::string getDescription() const ;
         double getAmount() const; 
         Date getDate() const;
-        std::set<std::string> getTags() const;
+        std::vector<std::string> getTags() const;
 
         void setDescription(const std::string &description);
         void setDate(Date date);
         void setAmount(double amount);
 
+        void setTags(const std::vector<std::string> &newTags);
+
         bool addTag(std::string tag);
         bool containsTag(std::string tag) const;
-        void mergeTags(const std::set<std::string> tags);
+        void mergeTags(const std::vector<std::string> &tags);
         bool deleteTag(std::string tag);
         unsigned int numTags() const;
+
 
         bool operator!=(const Item &other) const;
         bool operator==(const Item &other) const;

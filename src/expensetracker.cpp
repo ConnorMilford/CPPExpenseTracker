@@ -86,7 +86,6 @@ bool ExpenseTracker::addCategory(Category cat) {
 
     if (iterator == categories.end()) {
         auto result = categories.emplace(cat);
-        auto it = result.first;
         bool inserted = result.second;
         
         if (!inserted) {
@@ -353,7 +352,6 @@ std::string ExpenseTracker::str() const {
             itemJson["date"] = item.getDate().str();
             itemJson["description"] = item.getDescription();
             
-            // add reverse alphabetical
             json tagsJson = json::array();
             for (const std::string &tag : item.getTags()) {
                 tagsJson.push_back(tag);
@@ -371,4 +369,6 @@ std::string ExpenseTracker::str() const {
 }
 
 
-
+std::unordered_set<Category> ExpenseTracker::getCategories() {
+    return categories;
+}

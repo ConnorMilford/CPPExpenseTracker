@@ -1,6 +1,7 @@
 #include "item.h"
 #include "lib_json.hpp"
 #include <algorithm>
+#include <vector>
 
 #define NOT_FOUND_MSG "Item not found."
 

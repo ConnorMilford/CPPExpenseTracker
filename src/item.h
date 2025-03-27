@@ -15,7 +15,7 @@
 #define ITEM_H
 
 #include <string>
-#include <set>
+#include <vector>
 
 
 #include "date.h"

@@ -254,7 +254,7 @@ bool Category::operator==(const Category& cat) const {
 
 
 
-// TODO: Write a function, str, that takes no parameters and returns a
+// A function, str, that takes no parameters and returns a
 // std::string of the JSON representation of the data in the Category.
 //
 // See the coursework specification for how this JSON should look.
@@ -264,15 +264,31 @@ bool Category::operator==(const Category& cat) const {
 //  std::string s = cObj.str();
 
 std::string Category::str() const {
-        nlohmann::json j;
-
-        for (const auto& pair : items) {
-            const std::string& id = pair.first;
-            const Item& item = pair.second;
-            j[id] = nlohmann::json::parse(item.str());
+    nlohmann::json categoryJson;
+    
+    for (const auto& itemPair : items) {
+        const std::string& itemId = itemPair.first;
+        const Item& item = itemPair.second;
+        nlohmann::json itemJson;
+        
+        // Add basic item fields
+        itemJson["amount"] = item.getAmount();
+        itemJson["date"] = item.getDate().str();
+        itemJson["description"] = item.getDescription();
+        
+        // Add tags array
+        nlohmann::json tagsJson = nlohmann::json::array();
+        const auto& tags = item.getTags();
+        for (const auto& tag : tags) {
+            tagsJson.push_back(tag);
         }
-        return j.dump();
+        itemJson["tags"] = tagsJson;
+        
+        categoryJson[itemId] = itemJson;
     }
+    
+    return categoryJson.dump(-1, ' ', false) + "\n"; 
+}
 
 
 

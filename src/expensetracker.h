@@ -41,6 +41,7 @@ class ExpenseTracker {
         void save(const std::string &filePath) const;
 
         std::string str() const;
+        std::unordered_set<Category> getCategories();
 };
 
 #endif // EXPENSETRACKER_H
